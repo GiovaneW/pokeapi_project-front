@@ -2,7 +2,14 @@ import { AppBar, Box, Button, Container, Toolbar, Typography } from '@mui/materi
 import React from 'react'
 import { NavLink } from 'react-router-dom'
 
-export function Header(): React.ReactElement {
+export interface IHeaderProps {
+    options?: Array<{
+        label: string
+        to: string
+    }>
+}
+
+export function Header(props: IHeaderProps): React.ReactElement {
     return (
         <Box style={{
         }}>
@@ -24,25 +31,30 @@ export function Header(): React.ReactElement {
                         justifyContent: 'flex-start',
                         gap: '1rem'
                     }}>
-                        <Typography variant='h6' style={{
-                            color: 'blueviolet'
-                        }}>PokéBase</Typography>
-                        <NavLink to='/teste' style={{
-                            textDecoration: 'none'
-                        }}>
-                            <Button variant='outlined' style={{
-
-                            }} >Pokemons</Button>
-                        </NavLink>
                         <NavLink to='/' style={{
                             textDecoration: 'none'
-                        }}>
-                            <Button variant='outlined'>Berries</Button>
+                        }} >
+                            <Typography variant='h6' style={{
+                                color: 'blueviolet'
+                            }}>PokéBase</Typography>
                         </NavLink>
+
+                        {props.options && props.options.map((option, index) => {
+                            return (
+                                < NavLink to={option.to} style={{
+                                    textDecoration: 'none'
+                                }} key={'headerButton' + index}>
+                                    <Button variant='outlined' style={{
+
+                                    }} >{option.label}</Button>
+                                </NavLink>
+                            )
+                        })
+                        }
                     </Toolbar>
                 </Container>
             </AppBar>
-        </Box>
+        </Box >
     )
 
 }

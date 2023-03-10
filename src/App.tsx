@@ -9,7 +9,16 @@ export default function App(): React.ReactElement {
         <Container style={{
             position: 'relative'
         }}>
-            <Header />
+            <Header options={[
+                {
+                    label: 'Pokemons',
+                    to: '/pokemons'
+                },
+                {
+                    label: 'Berries',
+                    to: '/berries'
+                }
+            ]} />
             <Container style={{
                 padding: '1%',
                 paddingTop: '70px',
