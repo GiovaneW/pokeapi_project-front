@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { Params, useParams } from 'react-router-dom'
+import CustomFilters, { IFilterProps } from '../../components/filters/CustomFilter'
 import { CustomInput } from '../../components/inputs/CustomInput'
-import { CustomTable, IFilterProps, ITableColumn } from '../../components/table/CustomTable'
+import { CustomTable, ITableColumn } from '../../components/table/CustomTable'
 import { toTitleCase } from '../../helpers/TextHelpers'
 
 
@@ -345,40 +346,73 @@ const testColumns: Array<ITableColumn<IDataTest>> = [
     }
 ]
 
-export default function PokemonList(): React.ReactElement {
-    const { id } = useParams()
+interface PokemonListViewState {
+    filters: Array<IFilterProps>
+    data: Array<IDataTest>
+    columns: Array<ITableColumn<IDataTest>>
+}
 
-    const [filters, setFilters] = useState<Array<IFilterProps>>([])
+export interface PokemonListViewProps {
+    treta?: string
+}
+export default class PokemonList extends React.Component<PokemonListViewProps, PokemonListViewState> {
 
-    function handleFilters(filterProp: IFilterProps): void {
-        if (filters.find(filter => filter.columnKey == filterProp.columnKey)) {
-            if (filterProp.search.length > 3) {
-                setFilters(filters.map(filter => {
-                    if (filter.columnKey == filterProp.columnKey) {
-                        filter.search = filterProp.search
-                    }
-
-                    return filter
-                }))
-            } else {
-                setFilters(filters.filter(filter => filter.columnKey !== 'nome'))
-            }
-        } else {
-            setFilters([...filters, filterProp])
+    constructor(props: PokemonListViewProps) {
+        super(props)
+        this.state = {
+            filters: [],
+            data: data,
+            columns: testColumns
         }
     }
 
-    return (
-        <div style={{ backgroundColor: 'inherit' }}>
-            <div>
-                <CustomInput
-                    placeholder='Nome'
-                    type='text'
-                    onBlur={(e) => {
-                        handleFilters({ columnKey: 'nome', search: e.target.value })
-                    }} />
-            </div>
-            <CustomTable data={data} columns={testColumns} filters={filters} />
-        </div >
-    )
+    componentDidMount(): void {
+        console.log('component did mount')
+        console.log(this.state)
+    }
+
+    componentDidUpdate(prevProps: Readonly<PokemonListViewProps>, prevState: Readonly<PokemonListViewState>, snapshot?: any): void {
+        console.log('component did update')
+        console.log(this.state)
+    }
+
+    componentDidCatch(error: Error, errorInfo: React.ErrorInfo): void {
+        console.log('component did catch')
+        console.log(error)
+        console.log(errorInfo)
+    }
+
+    componentWillUnmount(): void {
+        console.log('component will unmount')
+    }
+
+    shouldComponentUpdate(nextProps: Readonly<PokemonListViewProps>, nextState: Readonly<PokemonListViewState>, nextContext: any): boolean {
+        console.log('should component update')
+        return true
+    }
+
+    private handleFilters(filters: Array<IFilterProps>): void {
+        this.setState({
+            ...this.state,
+            filters: filters
+        })
+    }
+
+    render() {
+        return (
+            <div style={{ backgroundColor: 'inherit' }}>
+                <CustomFilters
+                    key='customFilters'
+                    callBackFilters={this.handleFilters}
+                    filtersConfig={[{
+                        columnKey: 'nome',
+                        filterType: 'text',
+                        label: 'Nome',
+                        placeholder: 'Pesquise pelo nome'
+                    }]}
+                />
+                <CustomTable data={this.state.data} columns={this.state.columns} filters={this.state.filters} />
+            </div >
+        )
+    }
 }
