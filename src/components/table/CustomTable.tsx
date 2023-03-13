@@ -2,7 +2,7 @@ import { ArrowDropDown, ArrowDropUp } from '@mui/icons-material'
 import { Box, IconButton, Table, TableBody, TableCell, TableFooter, TableHead, TablePagination, TableRow } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { dataComparision } from '../../helpers/dataComparision'
-import { stringOrder } from '../../helpers/dataOrdering'
+import { IFilterProps } from '../filters/CustomFilter'
 
 interface ICustomDataTable {
     // eslint-disable-next-line
@@ -36,11 +36,6 @@ interface ITableProps<T extends ICustomDataTable> {
 interface IOrderProps {
     order: 'asc' | 'desc' | 'unset'
     fieldType: string
-    columnKey: string
-}
-
-export interface IFilterProps {
-    search: string
     columnKey: string
 }
 
@@ -167,8 +162,8 @@ export function CustomTable(props: ITableProps<any>): React.ReactElement {
     }
 
     function filterData(filters: Array<IFilterProps>): void {
-        // console.log('filters')
-        // console.log(filters)
+        console.log('filters')
+        console.log(filters)
         let match: boolean
         setData(props.data.filter(elementData => {
             match = true
