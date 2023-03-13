@@ -1,18 +1,19 @@
-import React, { useState } from 'react'
-import { useParams } from 'react-router-dom'
-import { CustomTable, IFilterProps, ITableColumn } from '../../components/table/CustomTable'
-import { toTitleCase } from '../../helpers/TextHelpers'
+import React from 'react'
+// import { useParams } from 'react-router-dom'
 
-export default function Home(): React.ReactElement {
-    const { id } = useParams()
+export default class Home extends React.Component {
 
-    const [filters, setFilters] = useState<Array<IFilterProps>>([])
+    constructor() {
+        super({})
+    }
 
-    return (
-        <div style={{ backgroundColor: 'inherit' }}>
-            <label>
-                Welcome bitches!
-            </label>
-        </div>
-    )
+    render(): React.ReactNode {
+        return (
+            <div style={{ backgroundColor: 'inherit' }}>
+                <label>
+                    Welcome bitches!
+                </label>
+            </div>
+        )
+    }
 }

@@ -1,6 +1,10 @@
-import React, { lazy } from 'react'
-import Home from '../views/home/Home'
+import React, { lazy, Suspense } from 'react'
 
-export const testComponent = lazy(() => import('./Test')),
-    pokemonList = lazy(() => import('./pokemon/PokemonList')),
-    home = <Home />
+const Home = lazy(() => import('./home/Home')),
+    Test = lazy(() => import('./Test')),
+    PokemonList = lazy(() => import('./pokemon/PokemonList'))
+
+export const
+    home = <Suspense ><Home /></Suspense>,
+    testComponent = <Suspense ><Test /></Suspense>,
+    pokemonList = <Suspense ><PokemonList /></Suspense>
