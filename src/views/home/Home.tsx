@@ -3,15 +3,23 @@ import React from 'react'
 
 export default class Home extends React.Component {
 
-    constructor() {
-        super({})
-    }
-
     render(): React.ReactNode {
         return (
             <div style={{ backgroundColor: 'inherit' }}>
                 <label>
-                    Welcome bitches!
+                    <p>
+                        <a>
+                            Welcome, this is a home component with nothing into there!
+                            <br />
+                            Calm down man, it`s a only test project, staystrong and keep continuing development.
+                        </a>
+                    </p>
+                    <p>
+                        <a>
+                            Success is comming!!
+                        </a>
+                    </p>
+
                 </label>
             </div>
         )
