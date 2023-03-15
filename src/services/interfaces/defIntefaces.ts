@@ -1,6 +1,6 @@
 export interface ISearchParams {
     limit?: number,
-    offset?: number
+    offset: number
 }
 
 export interface IQueryParamsObject {
@@ -17,11 +17,13 @@ export interface IApiResponse<T> {
     error?: string
     message?: string
 }
+
 export interface IListResponseContent<T> {
-    count?: number
-    next: string
-    previous?: string
-    result: Array<T>
+    count: number
+    limit: number
+    offset: number
+    rows: Array<T>
+    message?: string
 }
 
 export interface IBasicListResult {
@@ -32,5 +34,5 @@ export interface IBasicListResult {
 export interface IBasicNestListResult<T> extends IBasicListResult {
     name: string
     url: string
-    nest?: T
+    nest: T
 }

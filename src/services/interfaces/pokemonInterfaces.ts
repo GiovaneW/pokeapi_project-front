@@ -15,7 +15,7 @@ export interface IPokemon {
     order: number
     past_types: Array<IPastTypes>
     species: IBasicNestListResult<ISpecies>
-    sprites: Array<ISprites>
+    sprites: ISprites
     stats: Array<IStatListItem>
     types: Array<ITypeListItem>
     weight: number

@@ -6,8 +6,6 @@ import reportWebVitals from './reportWebVitals'
 import { BrowserRouter } from 'react-router-dom'
 import { ThemeProvider } from '@emotion/react'
 import theme from './config/theme'
-import { MainRoutes } from './config/routes/MainRouter'
-import { routes } from './config/routes/routes'
 
 const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement
