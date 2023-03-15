@@ -4,12 +4,19 @@ import React from 'react'
 export interface ICustomInputsProps {
     type: 'text' | 'number' | 'date'
     onBlur?: (e: React.FocusEvent<HTMLInputElement, Element>) => void
+    onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
     placeholder?: string
     label?: string
     defaultValue?: string | number | Date
 }
 
 export function CustomInput(props: ICustomInputsProps): React.ReactElement {
+    // const [value, setValue] = useState('')
+
+    // function clearInput() {
+    //     setValue('')
+    // }
+
     return (
         <Box maxWidth='400px' padding='4px' border='none' display='grid' gridColumn='auto' >
             {props.label && <div style={{
@@ -47,6 +54,9 @@ export function CustomInput(props: ICustomInputsProps): React.ReactElement {
                     placeholder={props.placeholder ?? ''}
                     onBlur={(e) => {
                         if (props.onBlur) props.onBlur(e)
+                    }}
+                    onChange={(e) => {
+                        if (props.onChange) props.onChange(e)
                     }} />
             }
         </Box>

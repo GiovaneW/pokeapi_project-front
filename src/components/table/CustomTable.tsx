@@ -1,5 +1,5 @@
 import { ArrowDropDown, ArrowDropUp } from '@mui/icons-material'
-import { Box, IconButton, Table, TableBody, TableCell, TableFooter, TableHead, TablePagination, TableRow } from '@mui/material'
+import { Box, IconButton, Skeleton, Table, TableBody, TableCell, TableFooter, TableHead, TablePagination, TableRow } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { dataComparision } from '../../helpers/dataComparision'
 import { IFilterProps } from '../filters/CustomFilter'
@@ -31,6 +31,7 @@ interface ITableProps<T extends ICustomDataTable> {
     rows?: number
     rowsPerPage?: number
     customSortFunction?: (a: T, b: T) => number
+    isLoading: boolean
 }
 
 interface IOrderProps {
@@ -136,6 +137,8 @@ export function CustomTable(props: ITableProps<any>): React.ReactElement {
     const [totalPages, setTotalPages] = useState<number>(0)
     const [offset, setOffset] = useState<number>(0)
     const [orders, setOrders] = useState<Array<IOrderProps>>([])
+    // const [isLoading] = useState<boolean>(!!props.isLoading)
+
 
     function pageHandler(page: number): void {
         if (!(page < 0) && !(page > totalPages)) {
@@ -162,13 +165,10 @@ export function CustomTable(props: ITableProps<any>): React.ReactElement {
     }
 
     function filterData(filters: Array<IFilterProps>): void {
-        console.log('filters')
-        console.log(filters)
         let match: boolean
         setData(props.data.filter(elementData => {
             match = true
             for (const filter of filters) {
-                // console.log(filter.search)
                 if (dataComparision({ firstItem: String(elementData[filter.columnKey] || ''), secondItem: filter.search }) < 0.9) {
                     match = false
                     break
@@ -235,31 +235,58 @@ export function CustomTable(props: ITableProps<any>): React.ReactElement {
             <Table>
                 <Header columns={props.columns} callBackOrder={callBackOrder} />
                 <TableBody>
-
-                    {
+                    {props.isLoading ?
+                        <>
+                            <TableRow>
+                                <TableCell colSpan={props.columns.length} style={{ padding: '5px' }} >
+                                    <Skeleton animation='wave' height='40px' width='100%' />
+                                </TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell colSpan={props.columns.length} style={{ padding: '5px' }} >
+                                    <Skeleton animation='wave' height='40px' width='100%' />
+                                </TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell colSpan={props.columns.length} style={{ padding: '5px' }} >
+                                    <Skeleton animation='wave' height='40px' width='100%' />
+                                </TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell colSpan={props.columns.length} style={{ padding: '5px' }} >
+                                    <Skeleton animation='wave' height='40px' width='100%' />
+                                </TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell colSpan={props.columns.length} style={{ padding: '5px' }} >
+                                    <Skeleton animation='wave' height='40px' width='100%' />
+                                </TableCell>
+                            </TableRow>
+                        </>
+                        :
                         data.length ? data.slice(offset, offset + rowsPerPage).map((elementData, index) => {
                             return (
                                 <Row data={elementData} columns={props.columns} key={'customRow' + index} />
                             )
                         }) : <TableRow />
                     }
-
                 </TableBody>
-                <TableFooter>
-                    <TableRow>
-                        <TablePagination
-                            page={page}
-                            count={data.length}
-                            rowsPerPage={rowsPerPage}
-                            labelRowsPerPage='Linhas por página:'
-                            onRowsPerPageChange={(e) => { setRowsPerPage(Number(e.target.value)) }}
-                            onPageChange={(_, page) => {
-                                pageHandler(page)
-                                if (props?.callBackPage) props.callBackPage(page)
-                            }}
-                        />
-                    </TableRow>
-                </TableFooter>
+                {!props.isLoading &&
+                    <TableFooter>
+                        <TableRow>
+                            <TablePagination
+                                page={page}
+                                count={data.length}
+                                rowsPerPage={rowsPerPage}
+                                labelRowsPerPage='Linhas por página:'
+                                onRowsPerPageChange={(e) => { setRowsPerPage(Number(e.target.value)) }}
+                                onPageChange={(_, page) => {
+                                    pageHandler(page)
+                                    if (props?.callBackPage) props.callBackPage(page)
+                                }}
+                            />
+                        </TableRow>
+                    </TableFooter>}
             </Table>
         </Box>
     )

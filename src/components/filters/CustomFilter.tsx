@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import CustomButton from '../buttons/CustomButton'
 import { CustomInput } from '../inputs/CustomInput'
 import { ISelectOptions } from '../select/CustomSelect'
 
@@ -18,7 +19,6 @@ interface IFilterConfig {
 }
 
 interface ICustomFilterProps {
-    key: string
     callBackFilters: (e: Array<IFilterProps>) => void
     filtersConfig: Array<IFilterConfig>
     filters?: Array<IFilterProps>
@@ -47,28 +47,53 @@ export default function CustomFilters(props: ICustomFilterProps): React.ReactEle
         }
     }
 
+    // function clearFilters() {
+    //     setFilters([])
+    //     props.callBackFilters([])
+    // }
+
     useEffect(() => {
-        props.callBackFilters(filters)
-    }, [filters])
+        if (filters.length)
+            props.callBackFilters(filters)
+    }, [])
 
     return (
-        <div>
-            {props.filtersConfig && props.filtersConfig.map((filterElement, index) => {
-                return (
-                    <>
-                        {filterElement.filterType === 'select' ? null :
-                            <CustomInput
-                                key={`customFilterInput-${filterElement.columnKey}-${index}`}
-                                label={filterElement.label ?? ''}
-                                placeholder={filterElement.placeholder ?? ''}
-                                type={filterElement.filterType}
-                                onBlur={(e) => {
-                                    handleFilters({ columnKey: filterElement.columnKey, search: e.target.value })
-                                }} />
-                        }
-                    </>
-                )
-            })}
+        <div key={`filterComponent-${Math.ceil(Math.random())}`}>
+            {props.filtersConfig.length > 0 &&
+                <>
+                    <div style={{
+                        display: 'grid',
+                        gridTemplateColumns: `${props.filtersConfig.length === 1 ? 'repeat(1, 100%)' : `repeat(${Math.min(4, props.filtersConfig.length)}, ${Math.fround(100 / Math.max(3, Math.min(4, props.filtersConfig.length)))}%)`}`
+                    }}>
+
+                        {props.filtersConfig.map((filterElement, index) => {
+                            return (
+                                <React.Fragment key={`customFilterInput-${filterElement.columnKey}-${index}`}>
+                                    {filterElement.filterType === 'select' ? <div key={`customFilterInput-${filterElement.columnKey}-${index}`}></div> :
+                                        <CustomInput
+                                            label={filterElement.label ?? ''}
+                                            placeholder={filterElement.placeholder ?? ''}
+                                            type={filterElement.filterType}
+                                            onBlur={(e) => {
+                                                handleFilters({ columnKey: filterElement.columnKey, search: e.target.value })
+                                            }} />
+                                    }
+                                </React.Fragment>
+                            )
+                        })}
+                    </div>
+                    <div style={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        justifyContent: 'end',
+                        padding: '2px',
+                        gap: '10px'
+                    }}>
+                        {/* <CustomButton type='button' onClick={() => console.log('treta')}>Limpar Filtros</CustomButton> */}
+                        <CustomButton type='button' onClick={() => props.callBackFilters(filters)}>Filtrar Resultados</CustomButton>
+                    </div>
+                </>
+            }
         </div>
     )
 }
