@@ -1,6 +1,7 @@
-import { AppBar, Box, Button, Container, Toolbar, Typography } from '@mui/material'
+import { AppBar, Box, Container, Toolbar, Typography } from '@mui/material'
 import React from 'react'
 import { NavLink } from 'react-router-dom'
+import CustomButton from '../buttons/CustomButton'
 
 export interface IHeaderProps {
     options?: Array<{
@@ -21,6 +22,8 @@ export function Header(props: IHeaderProps): React.ReactElement {
                 borderWidth: '1px',
                 borderRadius: '5px',
                 marginTop: '2px',
+                width: '80%',
+                marginRight: '10%'
             }}>
                 <Container style={{
                     padding: 0
@@ -41,13 +44,9 @@ export function Header(props: IHeaderProps): React.ReactElement {
 
                         {props.options && props.options.map((option, index) => {
                             return (
-                                < NavLink to={option.to} style={{
-                                    textDecoration: 'none'
-                                }} key={'headerButton' + index}>
-                                    <Button variant='outlined' style={{
-
-                                    }} >{option.label}</Button>
-                                </NavLink>
+                                <CustomButton key={'headerButton' + index} type='button' href={option.to}>
+                                    {option.label}
+                                </CustomButton>
                             )
                         })
                         }
