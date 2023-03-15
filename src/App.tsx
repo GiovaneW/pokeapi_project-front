@@ -1,15 +1,15 @@
 import { Container } from '@mui/material'
 import React from 'react'
 import { Outlet } from 'react-router-dom'
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 import { Header } from './components/headers/Header'
 import { MainRoutes } from './config/routes/MainRouter'
 import { routes } from './config/routes/routes'
 
 export default function App(): React.ReactElement {
     return (
-        <Container style={{
-            position: 'relative'
-        }}>
+        <Container>
             <Header options={[
                 {
                     label: 'Pokemons',
@@ -23,10 +23,11 @@ export default function App(): React.ReactElement {
             <Container style={{
                 padding: '1%',
                 paddingTop: '70px',
-                position: 'relative'
+                // position: 'relative'
             }}>
                 <MainRoutes routes={routes} />
                 <Outlet />
+                <ToastContainer />
             </Container >
         </Container >
     )
