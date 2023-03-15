@@ -1,379 +1,102 @@
-import React, { useState } from 'react'
-import { Params, useParams } from 'react-router-dom'
+import React from 'react'
 import CustomFilters, { IFilterProps } from '../../components/filters/CustomFilter'
-import { CustomInput } from '../../components/inputs/CustomInput'
 import { CustomTable, ITableColumn } from '../../components/table/CustomTable'
+import { Toast } from '../../components/toast/Toast'
 import { toTitleCase } from '../../helpers/TextHelpers'
+import { IBasicNestListResult } from '../../services/interfaces/defIntefaces'
+import { IPokemon } from '../../services/interfaces/pokemonInterfaces'
+import { listPokemons } from '../../services/searches/pokemon/pokemonService'
 
-
-
-interface IDataTest {
-    id: number
-    nome: string
-    idade: number
-    naturalidade: string
-    nascimento: Date
-    estadoCivil: string
-    endereco?: {
-        rua: string
-    }
-}
-
-const data: Array<IDataTest> = [
+export type TPokemonListData = IBasicNestListResult<Omit<IPokemon, 'moves' | 'past_types' | 'game_indices'>>
+const testColumns: Array<ITableColumn<TPokemonListData>> = [
     {
-        id: Number((Math.random() * 100).toFixed(0)),
-        estadoCivil: 'solteiro',
-        idade: 28,
-        nascimento: new Date(1995, 1, 18),
-        naturalidade: 'Fim do mundo',
-        nome: 'Giovane Welter'
-    },
-    {
-        id: Number((Math.random() * 100).toFixed(0)),
-        estadoCivil: 'solteiro',
-        idade: 28,
-        nascimento: new Date(1995, 1, 18),
-        naturalidade: 'Fim do mundo',
-        nome: 'Giovane'
-    },
-    {
-        id: Number((Math.random() * 100).toFixed(0)),
-        estadoCivil: 'solteiro',
-        idade: 28,
-        nascimento: new Date(1995, 1, 18),
-        naturalidade: 'Fim do mundo',
-        nome: 'Welter'
-    },
-    {
-        id: Number((Math.random() * 100).toFixed(0)),
-        estadoCivil: 'caçando',
-        idade: 28,
-        nascimento: new Date(1995, 1, 18),
-        naturalidade: 'Fim do mundo',
-        nome: '06'
-    },
-    {
-        id: Number((Math.random() * 100).toFixed(0)),
-        estadoCivil: 'preso',
-        idade: 28,
-        nascimento: new Date(1995, 1, 18),
-        naturalidade: 'Fim do mundo',
-        nome: 'Bonfim'
-    },
-    {
-        id: Number((Math.random() * 100).toFixed(0)),
-        estadoCivil: 'amarrado',
-        idade: 28,
-        nascimento: new Date(1995, 1, 18),
-        naturalidade: 'Fim do mundo',
-        nome: 'Rhode'
-    },
-    {
-        id: Number((Math.random() * 100).toFixed(0)),
-        estadoCivil: 'mussum ensaboado',
-        idade: 28,
-        nascimento: new Date(1995, 1, 18),
-        naturalidade: 'Fim do mundo',
-        nome: 'Yago'
-    },
-    {
-        id: Number((Math.random() * 100).toFixed(0)),
-        estadoCivil: 'mussum ensaboado',
-        idade: 28,
-        nascimento: new Date(1995, 1, 18),
-        naturalidade: 'Fim do mundo',
-        nome: 'Yago'
-    },
-    {
-        id: Number((Math.random() * 100).toFixed(0)),
-        estadoCivil: 'mussum ensaboado',
-        idade: 28,
-        nascimento: new Date(1995, 1, 18),
-        naturalidade: 'Fim do mundo',
-        nome: 'Yago'
-    },
-    {
-        id: Number((Math.random() * 100).toFixed(0)),
-        estadoCivil: 'mussum ensaboado',
-        idade: 28,
-        nascimento: new Date(1995, 1, 18),
-        naturalidade: 'Fim do mundo',
-        nome: 'Yago'
-    },
-    {
-        id: Number((Math.random() * 100).toFixed(0)),
-        estadoCivil: 'mussum ensaboado',
-        idade: 28,
-        nascimento: new Date(1995, 1, 18),
-        naturalidade: 'Fim do mundo',
-        nome: 'Yago'
-    },
-    {
-        id: Number((Math.random() * 100).toFixed(0)),
-        estadoCivil: 'mussum ensaboado',
-        idade: 28,
-        nascimento: new Date(1995, 1, 18),
-        naturalidade: 'Fim do mundo',
-        nome: 'Yago'
-    },
-    {
-        id: Number((Math.random() * 100).toFixed(0)),
-        estadoCivil: 'mussum ensaboado',
-        idade: 28,
-        nascimento: new Date(1995, 1, 18),
-        naturalidade: 'Fim do mundo',
-        nome: 'Yago'
-    },
-    {
-        id: Number((Math.random() * 100).toFixed(0)),
-        estadoCivil: 'mussum ensaboado',
-        idade: 28,
-        nascimento: new Date(1995, 1, 18),
-        naturalidade: 'Fim do mundo',
-        nome: 'Yago'
-    },
-    {
-        id: Number((Math.random() * 100).toFixed(0)),
-        estadoCivil: 'mussum ensaboado',
-        idade: 28,
-        nascimento: new Date(1995, 1, 18),
-        naturalidade: 'Fim do mundo',
-        nome: 'Yago'
-    },
-    {
-        id: Number((Math.random() * 100).toFixed(0)),
-        estadoCivil: 'mussum ensaboado',
-        idade: 28,
-        nascimento: new Date(1995, 1, 18),
-        naturalidade: 'Fim do mundo',
-        nome: 'Yago'
-    },
-    {
-        id: Number((Math.random() * 100).toFixed(0)),
-        estadoCivil: 'mussum ensaboado',
-        idade: 28,
-        nascimento: new Date(1995, 1, 18),
-        naturalidade: 'Fim do mundo',
-        nome: 'Yago'
-    },
-    {
-        id: Number((Math.random() * 100).toFixed(0)),
-        estadoCivil: 'mussum ensaboado',
-        idade: 28,
-        nascimento: new Date(1995, 1, 18),
-        naturalidade: 'Fim do mundo',
-        nome: 'Yago'
-    },
-    {
-        id: Number((Math.random() * 100).toFixed(0)),
-        estadoCivil: 'mussum ensaboado',
-        idade: 28,
-        nascimento: new Date(1995, 1, 18),
-        naturalidade: 'Fim do mundo',
-        nome: 'Yago'
-    },
-    {
-        id: Number((Math.random() * 100).toFixed(0)),
-        estadoCivil: 'mussum ensaboado',
-        idade: 28,
-        nascimento: new Date(1995, 1, 18),
-        naturalidade: 'Fim do mundo',
-        nome: 'Yago'
-    },
-    {
-        id: Number((Math.random() * 100).toFixed(0)),
-        estadoCivil: 'mussum ensaboado',
-        idade: 28,
-        nascimento: new Date(1995, 1, 18),
-        naturalidade: 'Fim do mundo',
-        nome: 'Yago'
-    },
-    {
-        id: Number((Math.random() * 100).toFixed(0)),
-        estadoCivil: 'mussum ensaboado',
-        idade: 28,
-        nascimento: new Date(1995, 1, 18),
-        naturalidade: 'Fim do mundo',
-        nome: 'Yago'
-    },
-    {
-        id: Number((Math.random() * 100).toFixed(0)),
-        estadoCivil: 'mussum ensaboado',
-        idade: 28,
-        nascimento: new Date(1995, 1, 18),
-        naturalidade: 'Fim do mundo',
-        nome: 'Yago'
-    },
-    {
-        id: Number((Math.random() * 100).toFixed(0)),
-        estadoCivil: 'mussum ensaboado',
-        idade: 28,
-        nascimento: new Date(1995, 1, 18),
-        naturalidade: 'Fim do mundo',
-        nome: 'Yago'
-    },
-    {
-        id: Number((Math.random() * 100).toFixed(0)),
-        estadoCivil: 'mussum ensaboado',
-        idade: 28,
-        nascimento: new Date(1995, 1, 18),
-        naturalidade: 'Fim do mundo',
-        nome: 'Yago'
-    },
-    {
-        id: Number((Math.random() * 100).toFixed(0)),
-        estadoCivil: 'mussum ensaboado',
-        idade: 28,
-        nascimento: new Date(1995, 1, 18),
-        naturalidade: 'Fim do mundo',
-        nome: 'Yago'
-    },
-    {
-        id: Number((Math.random() * 100).toFixed(0)),
-        estadoCivil: 'mussum ensaboado',
-        idade: 28,
-        nascimento: new Date(1995, 1, 18),
-        naturalidade: 'Fim do mundo',
-        nome: 'Yago'
-    },
-    {
-        id: Number((Math.random() * 100).toFixed(0)),
-        estadoCivil: 'mussum ensaboado',
-        idade: 28,
-        nascimento: new Date(1995, 1, 18),
-        naturalidade: 'Fim do mundo',
-        nome: 'Yago'
-    },
-    {
-        id: Number((Math.random() * 100).toFixed(0)),
-        estadoCivil: 'mussum ensaboado',
-        idade: 28,
-        nascimento: new Date(1995, 1, 18),
-        naturalidade: 'Fim do mundo',
-        nome: 'Yago'
-    },
-    {
-        id: Number((Math.random() * 100).toFixed(0)),
-        estadoCivil: 'mussum ensaboado',
-        idade: 28,
-        nascimento: new Date(1995, 1, 18),
-        naturalidade: 'Fim do mundo',
-        nome: 'Yago'
-    },
-    {
-        id: Number((Math.random() * 100).toFixed(0)),
-        estadoCivil: 'mussum ensaboado',
-        idade: 28,
-        nascimento: new Date(1995, 1, 18),
-        naturalidade: 'Fim do mundo',
-        nome: 'Yago'
-    },
-    {
-        id: Number((Math.random() * 100).toFixed(0)),
-        estadoCivil: 'mussum ensaboado',
-        idade: 28,
-        nascimento: new Date(1995, 1, 18),
-        naturalidade: 'Fim do mundo',
-        nome: 'Yago'
-    },
-    {
-        id: Number((Math.random() * 100).toFixed(0)),
-        estadoCivil: 'mussum ensaboado',
-        idade: 28,
-        nascimento: new Date(1995, 1, 18),
-        naturalidade: 'Fim do mundo',
-        nome: 'Yago'
-    },
-    {
-        id: Number((Math.random() * 100).toFixed(0)),
-        estadoCivil: 'mussum ensaboado',
-        idade: 28,
-        nascimento: new Date(1995, 1, 18),
-        naturalidade: 'Fim do mundo',
-        nome: 'Yago'
-    },
-    {
-        id: Number((Math.random() * 100).toFixed(0)),
-        estadoCivil: 'mussum ensaboado',
-        idade: 28,
-        nascimento: new Date(1995, 1, 18),
-        naturalidade: 'Fim do mundo',
-        nome: 'Yago'
-    }
-]
-const testColumns: Array<ITableColumn<IDataTest>> = [
-    {
-        key: 'id',
+        key: 'nest.id',
+        render: (e) => e.nest.id,
         title: 'ID'
     },
     {
-        key: 'nome',
+        key: 'name',
         title: 'Nome',
+        render: (e) => toTitleCase(e.name),
         order: {
             dataType: 'string'
         }
     },
     {
-        key: 'idade',
-        title: 'Idade',
+        key: 'nest.base_experience',
+        title: 'Experiência Básica',
+        render: (e) => e.nest.base_experience,
         order: {
             dataType: 'number'
         }
     },
     {
-        key: 'nascimento',
-        title: 'Data de Nascimento',
-        render: (e) => { return e.nascimento.toLocaleDateString() },
+        key: 'nest.height',
+        title: 'Altura',
+        render: (e) => e.nest.height,
         order: {
-            dataType: 'date'
+            dataType: 'number'
         }
     },
     {
-        key: 'naturalidade',
-        title: 'Naturalidade',
-        render: (e) => toTitleCase(e.naturalidade),
+        key: 'nest.order',
+        title: 'Ordem',
+        render: (e) => e.nest.order,
         order: {
-            dataType: 'string'
+            dataType: 'number'
         }
     },
     {
-        key: 'estadoCivil',
-        title: 'Estado Civil',
-        render: (e) => toTitleCase(e.estadoCivil),
+        key: 'nest.weight',
+        title: 'Peso',
+        render: (e) => e.nest.weight,
         order: {
-            dataType: 'string'
+            dataType: 'number'
         }
     }
 ]
 
 interface PokemonListViewState {
     filters: Array<IFilterProps>
-    data: Array<IDataTest>
-    columns: Array<ITableColumn<IDataTest>>
+    data: Array<TPokemonListData>
+    columns: Array<ITableColumn<TPokemonListData>>
+    isLoading: boolean
+    error?: string
+    message?: string
 }
 
-export interface PokemonListViewProps {
-    treta?: string
-}
-export default class PokemonList extends React.Component<PokemonListViewProps, PokemonListViewState> {
+// export interface PokemonListViewProps {
+//     treta?: string
+// }
+export default class PokemonList<Props> extends React.Component<Props, PokemonListViewState> {
 
-    constructor(props: PokemonListViewProps) {
+    constructor(props: Props) {
         super(props)
         this.state = {
             filters: [],
-            data: data,
-            columns: testColumns
+            data: [],
+            columns: testColumns,
+            isLoading: true
         }
     }
 
-    componentDidMount(): void {
-        console.log('component did mount')
-        console.log(this.state)
+    async componentDidMount(): Promise<void> {
+        await listPokemons({ offset: 0, limit: 10 }).then(res => {
+            this.setState({
+                ...this.state,
+                isLoading: false,
+                data: res.data?.rows ?? [],
+                message: res.message ?? '',
+                error: res.error ?? ''
+            })
+        })
     }
 
-    componentDidUpdate(prevProps: Readonly<PokemonListViewProps>, prevState: Readonly<PokemonListViewState>, snapshot?: any): void {
+    componentDidUpdate(): void {
         console.log('component did update')
-        console.log(this.state)
+        if (this.state.message || this.state.error) {
+            Toast({ message: String(this.state.message || this.state.error), severity: this.state.error ? 'error' : 'info' })
+        }
     }
 
     componentDidCatch(error: Error, errorInfo: React.ErrorInfo): void {
@@ -382,19 +105,47 @@ export default class PokemonList extends React.Component<PokemonListViewProps, P
         console.log(errorInfo)
     }
 
-    componentWillUnmount(): void {
-        console.log('component will unmount')
+    private verifyFiltersUpdate(prevFilters: Array<IFilterProps>, nextFilters: Array<IFilterProps>): boolean {
+        if (prevFilters.length !== nextFilters.length) return true
+        else {
+            let different = false
+            for (const filter of nextFilters) {
+                if (prevFilters.find(elementFilter => elementFilter.columnKey === filter.columnKey && elementFilter.search !== filter.search)
+                    || !prevFilters.find(elementFilter => elementFilter.columnKey === filter.columnKey)) {
+                    different = true
+                    break
+                }
+            }
+            return different
+        }
     }
 
-    shouldComponentUpdate(nextProps: Readonly<PokemonListViewProps>, nextState: Readonly<PokemonListViewState>, nextContext: any): boolean {
-        console.log('should component update')
-        return true
+    private verifyDataUpdate(prevData: Array<TPokemonListData>, nextData: Array<TPokemonListData>): boolean {
+        if (prevData.length !== nextData.length) return true
+        else {
+            let different = false
+            for (const data of nextData) {
+                if (!prevData.find(elementData => elementData.nest.id === data.nest.id)) {
+                    different = true
+                    break
+                }
+            }
+            return different
+        }
+    }
+
+    shouldComponentUpdate(_: Readonly<Props>, nextState: Readonly<PokemonListViewState>): boolean {
+        console.log('component should update')
+        console.log(this.state)
+        console.log(nextState)
+
+        return this.state.message !== nextState.message || this.state.error !== nextState.error || this.verifyFiltersUpdate(this.state.filters, nextState.filters) || this.verifyDataUpdate(this.state.data, nextState.data)
     }
 
     private handleFilters(filters: Array<IFilterProps>): void {
         this.setState({
             ...this.state,
-            filters: filters
+            filters
         })
     }
 
@@ -402,17 +153,14 @@ export default class PokemonList extends React.Component<PokemonListViewProps, P
         return (
             <div style={{ backgroundColor: 'inherit' }}>
                 <CustomFilters
-                    key='customFilters'
-                    callBackFilters={this.handleFilters}
-                    filtersConfig={[{
-                        columnKey: 'nome',
-                        filterType: 'text',
-                        label: 'Nome',
-                        placeholder: 'Pesquise pelo nome'
-                    }]}
+                    callBackFilters={(e) => this.handleFilters(e)}
+                    filtersConfig={
+                        []
+                    }
                 />
-                <CustomTable data={this.state.data} columns={this.state.columns} filters={this.state.filters} />
-            </div >
+                {/* <CustomLoader open={this.state.isLoading} type='circular' backdrop={true} /> */}
+                <CustomTable isLoading={this.state.isLoading} data={this.state.data} columns={this.state.columns} filters={this.state.filters} />
+            </div>
         )
     }
 }
