@@ -183,7 +183,7 @@ export function CustomTable(props: ITableProps<any>): React.ReactElement {
         let result: number, sortOrder: number
         const auxDataList = [...data]
 
-        if (!(orders.length > 0)) {
+        if (!(orders.length > 0) && auxDataList.length) {
             auxDataList.sort((a, b) => {
                 return a['id'] < b['id'] ? -1 : 1
             })
