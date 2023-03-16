@@ -7,11 +7,11 @@ import { IBasicNestListResult } from '../../services/interfaces/defIntefaces'
 import { IPokemon } from '../../services/interfaces/pokemonInterfaces'
 import { listPokemons } from '../../services/searches/pokemon/pokemonService'
 
-export type TPokemonListData = IBasicNestListResult<Omit<IPokemon, 'moves' | 'past_types' | 'game_indices'>>
+export type TPokemonListData = Omit<IPokemon, 'moves' | 'past_types' | 'game_indices'>
 const testColumns: Array<ITableColumn<TPokemonListData>> = [
     {
-        key: 'nest.id',
-        render: (e) => e.nest.id,
+        key: 'id',
+        // render: (e) => e.nest.id,
         title: 'ID'
     },
     {
@@ -23,9 +23,9 @@ const testColumns: Array<ITableColumn<TPokemonListData>> = [
         }
     },
     {
-        key: 'nest.base_experience',
+        key: 'base_experience',
         title: 'Experiência Básica',
-        render: (e) => e.nest.base_experience,
+        render: (e) => e.base_experience,
         order: {
             dataType: 'number'
         }
@@ -33,23 +33,23 @@ const testColumns: Array<ITableColumn<TPokemonListData>> = [
     {
         key: 'nest.height',
         title: 'Altura',
-        render: (e) => e.nest.height,
+        // render: (e) => e.nest.height,
         order: {
             dataType: 'number'
         }
     },
     {
-        key: 'nest.order',
+        key: 'order',
         title: 'Ordem',
-        render: (e) => e.nest.order,
+        // render: (e) => e.nest.order,
         order: {
             dataType: 'number'
         }
     },
     {
-        key: 'nest.weight',
+        key: 'weight',
         title: 'Peso',
-        render: (e) => e.nest.weight,
+        // render: (e) => e.nest.weight,
         order: {
             dataType: 'number'
         }
@@ -81,7 +81,7 @@ export default class PokemonList<Props> extends React.Component<Props, PokemonLi
     }
 
     async componentDidMount(): Promise<void> {
-        await listPokemons({ offset: 0, limit: 10 }).then(res => {
+        await listPokemons({ offset: 0, limit: 1000 }).then(res => {
             this.setState({
                 ...this.state,
                 isLoading: false,
@@ -125,7 +125,7 @@ export default class PokemonList<Props> extends React.Component<Props, PokemonLi
         else {
             let different = false
             for (const data of nextData) {
-                if (!prevData.find(elementData => elementData.nest.id === data.nest.id)) {
+                if (!prevData.find(elementData => elementData.id === data.id)) {
                     different = true
                     break
                 }
@@ -155,7 +155,12 @@ export default class PokemonList<Props> extends React.Component<Props, PokemonLi
                 <CustomFilters
                     callBackFilters={(e) => this.handleFilters(e)}
                     filtersConfig={
-                        []
+                        [{
+                            columnKey: 'nome',
+                            filterType: 'text',
+                            label: 'Nome',
+                            placeholder: 'Pesquise pelo nome'
+                        }]
                     }
                 />
                 {/* <CustomLoader open={this.state.isLoading} type='circular' backdrop={true} /> */}
