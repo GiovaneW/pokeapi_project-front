@@ -1,6 +1,7 @@
-import yup, { ObjectSchema } from 'yup'
+import * as yup from 'yup'
+import { ObjectSchema } from 'yup'
 
-interface ITestSchema {
+export interface ITestSchema {
     name: string,
     age: number,
     born?: string,
