@@ -8,6 +8,8 @@ export interface ICustomInputsProps {
     placeholder?: string
     label?: string
     defaultValue?: string | number | Date
+    required?: boolean
+    name?: string
 }
 
 export function CustomInput(props: ICustomInputsProps): React.ReactElement {

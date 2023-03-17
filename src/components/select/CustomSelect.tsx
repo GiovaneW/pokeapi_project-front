@@ -1,3 +1,4 @@
+import { MenuItem, Select } from '@mui/material'
 import React from 'react'
 
 export interface ISelectOptions {
@@ -14,7 +15,10 @@ export default function CustomSelect(props: ICustomSelectProps): React.ReactElem
 
     return (
         <div>
-            vai ter um select aqui em algum momento da vida
+            <Select>
+                <MenuItem>Teste</MenuItem>
+                <MenuItem>Teste 2</MenuItem>
+            </Select>
         </div>
     )
 }

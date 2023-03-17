@@ -224,6 +224,7 @@ export function CustomTable(props: ITableProps<any>): React.ReactElement {
 
     useEffect(() => {
         setOffset(rowsPerPage * page)
+        if (data.length <= rowsPerPage * page) setPage(0)
     }, [page, rowsPerPage])
 
     useEffect(() => {
