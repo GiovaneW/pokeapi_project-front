@@ -1,10 +1,15 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
+export default class Test extends React.Component {
+    // const { id } = useParams()
 
-export default function Test(): React.ReactElement {
-    const { id } = useParams()
+    id = window.location.pathname.split('/')[2]
 
-    return (
-        <label>ID: {id}</label>
-    )
+    render(): React.ReactNode {
+        return (
+            <>
+                <label>ID: {this.id}</label>
+            </>
+        )
+    }
 }
