@@ -13,16 +13,11 @@ export interface ICustomInputsProps {
 }
 
 export function CustomInput(props: ICustomInputsProps): React.ReactElement {
-    // const [value, setValue] = useState('')
-
-    // function clearInput() {
-    //     setValue('')
-    // }
 
     return (
-        <Box maxWidth='400px' padding='4px' border='none' display='grid' gridColumn='auto' >
+        <Box maxWidth='400px' padding='4px 4px 0px 4px' border='none' display='grid' gridColumn='auto' >
             {props.label && <div style={{
-                zIndex: 9999,
+                zIndex: 9998,
                 marginBottom: '-9px'
             }}>
                 <label style={{
