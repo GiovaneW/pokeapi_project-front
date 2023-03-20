@@ -16,7 +16,7 @@ export default function CustomButton(props: ButtonProps): React.ReactElement {
             variant='outlined'
             {...props}
         >
-            {props.children}
+            {props.children ?? props.value}
         </Button>
     )
 }
