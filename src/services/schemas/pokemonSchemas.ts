@@ -9,7 +9,7 @@ export interface ITestSchema {
 }
 
 export const pokemonSchema: ObjectSchema<ITestSchema> = yup.object({
-    name: yup.string().required('Nome é obrigatório').defined(),
+    name: yup.string().required('Nome é obrigatório porque eu preciso testar o errro com uma frase muito longa. Vai que algum maluco né, queira colocar um texto como já vimos várias vezes...').defined(),
     age: yup.number().defined(),
     born: yup.string(),
     height: yup.number().defined()

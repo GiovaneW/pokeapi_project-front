@@ -1,9 +1,9 @@
 import React from 'react'
+import CustomButton from '../../components/buttons/CustomButton'
 import CustomFilters, { IFilterProps } from '../../components/filters/CustomFilter'
 import { CustomTable, ITableColumn } from '../../components/table/CustomTable'
 import { Toast } from '../../components/toast/Toast'
 import { toTitleCase } from '../../helpers/TextHelpers'
-import { IBasicNestListResult } from '../../services/interfaces/defIntefaces'
 import { IPokemon } from '../../services/interfaces/pokemonInterfaces'
 import { listPokemons } from '../../services/searches/pokemon/pokemonService'
 
@@ -152,6 +152,18 @@ export default class PokemonList<Props> extends React.Component<Props, PokemonLi
     render() {
         return (
             <div style={{ backgroundColor: 'inherit' }}>
+                <div style={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center'
+                }}>
+                    <h1>Pokemóns</h1>
+                    <CustomButton style={{
+                        height: '40px',
+                        minWidth: '100px'
+                    }} value='Criar' href='/pokemons/create' />
+                </div>
                 <CustomFilters
                     callBackFilters={(e) => this.handleFilters(e)}
                     filtersConfig={
