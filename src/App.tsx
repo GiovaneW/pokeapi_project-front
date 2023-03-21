@@ -10,7 +10,7 @@ import { routes } from './config/routes/routes'
 export default class App extends React.Component {
     render() {
         return (
-            <Container>
+            <Container >
                 <Header options={[
                     {
                         label: 'Pokemons',
@@ -22,9 +22,9 @@ export default class App extends React.Component {
                     }
                 ]} />
                 <Container style={{
+                    backgroundColor: '#f9f9f9',
                     padding: '1%',
-                    paddingTop: '70px',
-                    // position: 'relative'
+                    marginTop: '80px'
                 }}>
                     <MainRoutes routes={routes} />
                     <Outlet />
