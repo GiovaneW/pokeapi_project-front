@@ -1,10 +1,12 @@
 import { yupResolver } from '@hookform/resolvers/yup'
+import { Switch, ToggleButton } from '@mui/material'
 import React from 'react'
 import { Controller, DeepPartial, useForm } from 'react-hook-form'
 import { ObjectSchema } from 'yup'
 import CustomButton from '../buttons/CustomButton'
 import { CustomInput } from '../inputs/CustomInput'
 import CustomSelect, { ISelectOptions } from '../select/CustomSelect'
+import CustomSwitch from '../togles/CustomSwitch'
 
 
 interface IFieldProps {
@@ -12,7 +14,7 @@ interface IFieldProps {
     defaultValue: string | number
     label: string
     placeholder?: string
-    type: 'text' | 'number' | 'date' | 'select'
+    type: 'text' | 'number' | 'date' | 'select' | 'boolean'
     selectProps?: {
         selectOptions: Array<ISelectOptions>
         isMultiSelect?: boolean
@@ -65,14 +67,23 @@ export default function CustomForm(props: ICustomFormProps): React.ReactElement 
                                                     onBlur={field.onBlur}
                                                     onChange={field.onChange}
                                                 /> :
-                                                fieldMap.type !== 'select' && <CustomInput
-                                                    type={fieldMap.type}
-                                                    defaultValue={field.value}
-                                                    label={fieldMap.label}
-                                                    placeholder={fieldMap.placeholder}
-                                                    onBlur={field.onBlur}
-                                                    onChange={field.onChange}
-                                                />
+                                                fieldMap.type === 'boolean' ?
+                                                    <CustomSwitch
+                                                        label={fieldMap.label}
+                                                        // placeholder={fieldMap.placeholder}
+                                                        defaultChecked={!!fieldMap.defaultValue || field.value}
+                                                        onChange={field.onChange}
+                                                        value={field.value}
+                                                        onBlur={field.onBlur}
+                                                    /> :
+                                                    fieldMap.type !== 'select' && <CustomInput
+                                                        type={fieldMap.type}
+                                                        defaultValue={fieldMap.defaultValue || field.value}
+                                                        label={fieldMap.label}
+                                                        placeholder={fieldMap.placeholder}
+                                                        onBlur={field.onBlur}
+                                                        onChange={field.onChange}
+                                                    />
                                             }
                                             {errors[fieldMap.name] && errors[fieldMap.name]?.message ?
                                                 <div style={{

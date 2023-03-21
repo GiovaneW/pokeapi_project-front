@@ -14,6 +14,10 @@ export default function CustomButton(props: ButtonProps): React.ReactElement {
             }}
             type={props.type}
             variant='outlined'
+            style={{
+                ...props.style,
+                backgroundColor: 'white'
+            }}
             {...props}
         >
             {props.children ?? props.value}
