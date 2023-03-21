@@ -55,7 +55,7 @@ interface IPastTypes extends IObjectLiteral { }
 
 interface ISpecies extends IObjectLiteral { }
 
-interface ISprites {
+export interface ISprites {
     back_default: string | null
     back_female: string | null
     back_shiny: string | null

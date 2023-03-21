@@ -2,17 +2,29 @@ import React from 'react'
 import CustomButton from '../../components/buttons/CustomButton'
 import CustomFilters, { IFilterProps } from '../../components/filters/CustomFilter'
 import { CustomTable, ITableColumn } from '../../components/table/CustomTable'
+import CustomTableOptionsMenu from '../../components/table/CustomTableOptionsMenu'
 import { Toast } from '../../components/toast/Toast'
 import { toTitleCase } from '../../helpers/TextHelpers'
 import { IPokemon } from '../../services/interfaces/pokemonInterfaces'
 import { listPokemons } from '../../services/searches/pokemon/pokemonService'
 
-export type TPokemonListData = Omit<IPokemon, 'moves' | 'past_types' | 'game_indices'>
+export interface TPokemonListData extends Omit<IPokemon, 'moves' | 'past_types' | 'game_indices'> {
+    internal_id: number
+}
 const testColumns: Array<ITableColumn<TPokemonListData>> = [
     {
-        key: 'id',
+        key: 'internal_id',
         // render: (e) => e.nest.id,
         title: 'ID'
+    },
+    {
+        key: 'sprites.front_default',
+        title: 'Sprite',
+        render: (e) => {
+            return (
+                <img src={e.sprites.front_default ?? e.sprites.front_shiny ?? ''} />
+            )
+        }
     },
     {
         key: 'name',
@@ -52,6 +64,25 @@ const testColumns: Array<ITableColumn<TPokemonListData>> = [
         // render: (e) => e.nest.weight,
         order: {
             dataType: 'number'
+        }
+    },
+    {
+        key: 'actions',
+        title: 'Ações',
+        rowAlign: 'center',
+        render: (e) => {
+            return (
+                <CustomTableOptionsMenu
+                    options={
+                        [
+                            {
+                                title: 'Teste de texto longo',
+                                onClick: (e) => console.log(e),
+                                to: `/pokemons/edit/${e.internal_id}`
+                            }
+                        ]
+                    } />
+            )
         }
     }
 ]
@@ -93,17 +124,13 @@ export default class PokemonList<Props> extends React.Component<Props, PokemonLi
     }
 
     componentDidUpdate(): void {
-        console.log('component did update')
         if (this.state.message || this.state.error) {
             Toast({ message: String(this.state.message || this.state.error), severity: this.state.error ? 'error' : 'info' })
         }
     }
 
-    componentDidCatch(error: Error, errorInfo: React.ErrorInfo): void {
-        console.log('component did catch')
-        console.log(error)
-        console.log(errorInfo)
-    }
+    // componentDidCatch(error: Error, errorInfo: React.ErrorInfo): void {
+    // }
 
     private verifyFiltersUpdate(prevFilters: Array<IFilterProps>, nextFilters: Array<IFilterProps>): boolean {
         if (prevFilters.length !== nextFilters.length) return true
@@ -135,10 +162,6 @@ export default class PokemonList<Props> extends React.Component<Props, PokemonLi
     }
 
     shouldComponentUpdate(_: Readonly<Props>, nextState: Readonly<PokemonListViewState>): boolean {
-        console.log('component should update')
-        console.log(this.state)
-        console.log(nextState)
-
         return this.state.message !== nextState.message || this.state.error !== nextState.error || this.verifyFiltersUpdate(this.state.filters, nextState.filters) || this.verifyDataUpdate(this.state.data, nextState.data)
     }
 

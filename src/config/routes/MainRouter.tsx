@@ -28,8 +28,7 @@ export function MainRoutes(props: { routes: Array<IRouteProps> }): React.ReactEl
             <Route path='test' element={home} />
             <Route path='/pokemons' element={pokemonList} />
             <Route path='/pokemons/:id' element={testComponent} />
-            {/* <Route path='/pokemons/:id/edit' element={pokemonForm}  /> */}
-            <Route path='/pokemons/:id/edit' element={testComponent} loader={(loader) => {
+            <Route path='/pokemons/edit/:id' element={testComponent} loader={(loader) => {
                 console.log(loader)
             }} />
             <Route path='/pokemons/create' element={pokemonForm} />
