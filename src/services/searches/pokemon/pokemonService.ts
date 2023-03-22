@@ -2,7 +2,7 @@ import { IApiResponse, IBasicNestListResult, IListResponseContent, IObjectLitera
 import api from '../../api'
 import { IPokemon } from '../../interfaces/pokemonInterfaces'
 import { TPokemonListData } from '../../../views/pokemon/PokemonList'
-import { AxiosError } from 'axios'
+import { AxiosError, AxiosResponse } from 'axios'
 
 export async function listPokemons(params: ISearchParams): Promise<IApiResponse<IListResponseContent<TPokemonListData>>> {
     const queryParams = new URLSearchParams({
@@ -19,11 +19,29 @@ export async function listPokemons(params: ISearchParams): Promise<IApiResponse<
             if (res.data) result.data = res.data
         }, (err: AxiosError<IObjectLiteral>) => {
             if (err.response?.data?.message) {
-                console.log(err)
                 result.error = String(err.response.data.message)
             }
         })
-    return result // {} as IListResponseContent<IBasicNestListResult<Omit<IPokemon, 'past_types' | 'game_indices'>>>
+    return result
+}
+
+export async function deletePokemon(internal_id: number | string): Promise<IApiResponse<IObjectLiteral>> {
+    const result: IApiResponse<IObjectLiteral> = { data: undefined, error: '', message: '' }
+    return new Promise((resolve) => {
+        api.delete<AxiosError<{ message?: string, error?: string }>, AxiosResponse<{ data?: any, message?: string }>>(`/pokemon/${internal_id}`).then(res => {
+            result.status = res.status
+            result.message = res.data.message ?? 'Pokémon deletado com sucesso!'
+            if (res.data.data) result.data = res.data.data
+
+            resolve(result)
+        }, err => {
+            result.status = err.response?.status
+            result.error = err.response?.data.message ?? err.response?.data.error ?? err.message
+
+            resolve(result)
+        })
+
+    })
 }
 
 // export async function listPokemonsApi(params: ISearchParams): Promise<IApiResponse<IListResponseContent<IPokemon>>> {
@@ -38,7 +56,6 @@ export async function listPokemons(params: ISearchParams): Promise<IApiResponse<
 //         pokelist = res.data
 //         result.status = res.status
 //     }, error => {
-//         console.log(error)
 //         result.message = 'Falha ao buscar listagem de Pokémons.'
 //     })
 
