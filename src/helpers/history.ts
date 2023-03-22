@@ -7,12 +7,12 @@ class History {
         this.location = window.location
     }
 
-    go(location: string): void {
-        console.log(location)
-    }
-
+    // go(location: string): void {
+    // }
+    
     push(path: string): void {
-        this.location.pathname = path
+        this.location.assign(path)
+        // this.location.pathname = path
     }
 
     goBack(): void {
