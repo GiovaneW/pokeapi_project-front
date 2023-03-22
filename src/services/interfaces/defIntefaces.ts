@@ -15,7 +15,7 @@ export interface IApiResponse<T> {
     data?: T
     status?: number
     error?: string
-    message?: string
+    message: string
 }
 
 export interface IListResponseContent<T> {
