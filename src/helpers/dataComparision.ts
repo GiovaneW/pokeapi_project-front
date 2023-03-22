@@ -4,9 +4,7 @@ interface IDataComparision<T> {
 }
 
 export function dataComparision(props: IDataComparision<string>) {
-    // console.log(props.firstItem, props.secondItem)
     const test = Number(jaroWinkler(props))
-    // console.log(test)
     return test
 }
 

@@ -54,12 +54,11 @@ export default function CustomSelect(props: ICustomSelectProps): React.ReactElem
                     if (props.onBlur) props.onBlur(e)
                 }}
                 onChange={(e) => {
-                    console.log(e.target.value)
                     if (props.onChange) props.onChange(e)
                 }}
-                onBeforeInput={(e) => {
-                    console.log(e)
-                }}
+                // onBeforeInput={(e) => {
+                //     console.log(e)
+                // }}
                 defaultValue={props.defaultValue ?? ''}
                 // multiple={props.isMulti}
                 inputMode='text'
