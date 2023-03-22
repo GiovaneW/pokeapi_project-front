@@ -6,7 +6,7 @@ import { history } from '../../helpers/history'
 interface ITableMenuOption {
     title: string
     to?: string
-    onClick?: (e: any) => void
+    onClick?: (e?: React.MouseEvent<HTMLLIElement, MouseEvent>) => void
     icon?: React.ReactFragment
 }
 
@@ -70,6 +70,7 @@ export default function CustomTableOptionsMenu(props: ICustomTableOptionsMenuPro
                     return <MenuItem
                         key={`table-menu-item${option.title}-${index}`}
                         onClick={(e) => {
+                            if (option.onClick) option.onClick(e)
                             if (option.to) history.push(option.to)
                             handleCloseMenu()
                         }} >

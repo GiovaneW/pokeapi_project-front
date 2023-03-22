@@ -32,6 +32,7 @@ interface ITableProps<T extends ICustomDataTable> {
     rowsPerPage?: number
     customSortFunction?: (a: T, b: T) => number
     isLoading: boolean
+    rowClick?: (e: T) => void
 }
 
 interface IOrderProps {
@@ -71,10 +72,14 @@ function Header(props: { columns: Array<ITableColumn<ICustomDataTable>>, callBac
     )
 }
 
-function Row(props: { data: ICustomDataTable, columns: Array<ITableColumn<ICustomDataTable>> }): React.ReactElement {
+function Row(props: { data: ICustomDataTable, columns: Array<ITableColumn<ICustomDataTable>>, rowClick?: (e: ICustomDataTable) => void }): React.ReactElement {
     return (
         <React.Fragment>
-            <TableRow>
+            <TableRow onClick={() => {
+                if (props.rowClick) props.rowClick(props.data)
+            }} style={{
+                cursor: props.rowClick ? 'pointer' : 'default'
+            }}>
                 {
                     props.columns.map((column, index) => {
                         return (
@@ -130,20 +135,19 @@ function TableOrderButton(props: { orderProps: IOrderProps, callBackOrder: (orde
 
 // eslint-disable-next-line
 export function CustomTable(props: ITableProps<any>): React.ReactElement {
-    // eslint-disable-next-line
-    const [data, setData] = useState<Array<any>>(props.data ?? [])
+    const [orders, setOrders] = useState<Array<IOrderProps>>([])
     const [rowsPerPage, setRowsPerPage] = useState<number>(props.rowsPerPage ?? 10)
     const [page, setPage] = useState<number>(0)
-    const [totalPages, setTotalPages] = useState<number>(0)
-    const [offset, setOffset] = useState<number>(0)
-    const [orders, setOrders] = useState<Array<IOrderProps>>([])
-    // const [isLoading] = useState<boolean>(!!props.isLoading)
-
 
     function pageHandler(page: number): void {
         if (!(page < 0) && !(page > totalPages)) {
             setPage(page)
         }
+    }
+
+    function rowsPerPageHandler(rowsPerPage: number): void {
+        if (data.length <= rowsPerPage * page) setPage(0)
+        setRowsPerPage(rowsPerPage)
     }
 
     function callBackOrder(cbOrderProps: IOrderProps): void {
@@ -155,31 +159,29 @@ export function CustomTable(props: ITableProps<any>): React.ReactElement {
             const auxOrderProps = orders.filter(currentProp => currentProp.columnKey !== cbOrderProps.columnKey)
             auxOrderProps.push(cbOrderProps)
             setOrders(auxOrderProps)
-            // setOrders(orders.map(orderProp => {
-            //     if (orderProp.columnKey === cbOrderProps.columnKey) {
-            //         orderProp.order = cbOrderProps.order
-            //     }
-            //     return orderProp
-            // }))
         }
     }
 
-    function filterData(filters: Array<IFilterProps>): void {
-        let match: boolean
-        setData(props.data.filter(elementData => {
-            match = true
-            for (const filter of filters) {
-                if (dataComparision({ firstItem: String(elementData[filter.columnKey] || ''), secondItem: filter.search }) < 0.9) {
-                    match = false
-                    break
+    function filterData(): Array<typeof props.data> {
+        if (props.filters && props.filters.length > 0) {
+            let match: boolean
+            return props.data.filter(elementData => {
+                match = true
+                for (const filter of props.filters as Array<IFilterProps>) {
+                    if (dataComparision({ firstItem: String(elementData[filter.columnKey] || ''), secondItem: filter.search }) < 0.9) {
+                        match = false
+                        break
+                    }
                 }
-            }
 
-            if (match) return elementData
-        }))
+                if (match) return elementData
+            })
+        } else {
+            return props.data
+        }
     }
 
-    function orderData(): void {
+    function orderData(data: typeof props.data): Array<typeof props.data> {
         let result: number, sortOrder: number
         const auxDataList = [...data]
 
@@ -206,30 +208,12 @@ export function CustomTable(props: ITableProps<any>): React.ReactElement {
                 return result
             })
         }
-        setData(auxDataList)
+        return auxDataList
     }
 
-    useEffect(() => {
-        setData(props.data)
-    }, [props.data])
-
-    useEffect(() => {
-        // if (props.filters?.length)
-        filterData(props.filters ?? [])
-    }, [props.filters])
-
-    useEffect(() => {
-        orderData()
-    }, [orders])
-
-    useEffect(() => {
-        setOffset(rowsPerPage * page)
-        if (data.length <= rowsPerPage * page) setPage(0)
-    }, [page, rowsPerPage])
-
-    useEffect(() => {
-        setTotalPages(Math.ceil(data.length / rowsPerPage))
-    }, [rowsPerPage, data])
+    const data = orderData(filterData())
+    const totalPages = Math.ceil(data.length / rowsPerPage)
+    const offset = rowsPerPage * page
 
     return (
         <Box>
@@ -267,7 +251,7 @@ export function CustomTable(props: ITableProps<any>): React.ReactElement {
                         :
                         data.length ? data.slice(offset, offset + rowsPerPage).map((elementData, index) => {
                             return (
-                                <Row data={elementData} columns={props.columns} key={'customRow' + index} />
+                                <Row data={elementData} rowClick={props.rowClick} columns={props.columns} key={'customRow' + index} />
                             )
                         }) : <TableRow />
                     }
@@ -280,7 +264,7 @@ export function CustomTable(props: ITableProps<any>): React.ReactElement {
                                 count={data.length}
                                 rowsPerPage={rowsPerPage}
                                 labelRowsPerPage='Linhas por página:'
-                                onRowsPerPageChange={(e) => { setRowsPerPage(Number(e.target.value)) }}
+                                onRowsPerPageChange={(e) => { rowsPerPageHandler(Number(e.target.value)) }}
                                 onPageChange={(_, page) => {
                                     pageHandler(page)
                                     if (props?.callBackPage) props.callBackPage(page)
