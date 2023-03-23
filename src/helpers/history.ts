@@ -9,7 +9,7 @@ class History {
 
     // go(location: string): void {
     // }
-    
+
     push(path: string): void {
         this.location.assign(path)
         // this.location.pathname = path
@@ -20,6 +20,10 @@ class History {
             this.history.back()
         else
             this.location.pathname = '/'
+    }
+
+    getUrlPaths(): Array<string> {
+        return this.location.pathname.split('/').filter(value => value !== '')
     }
 
 }
