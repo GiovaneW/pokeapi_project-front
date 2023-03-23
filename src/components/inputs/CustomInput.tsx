@@ -9,6 +9,7 @@ export interface ICustomInputsProps {
     label?: string
     defaultValue?: string | number
     name?: string
+    isrequired?: NodeRequire
 }
 
 export function CustomInput(props: ICustomInputsProps): React.ReactElement {
@@ -27,11 +28,9 @@ export function CustomInput(props: ICustomInputsProps): React.ReactElement {
                     color: 'blueviolet',
                     fontFamily: 'monospace',
                     margin: '0.7em'
-                }}>{props.label}</label>
+                }}>{props.label}{props.isrequired ? '*' : ''}</label>
             </div>
             }
-            {/* {props.type === 'date' || props.defaultValue instanceof Date ? 
-            null : */}
             <input
                 style={{
                     borderStyle: 'solid',
@@ -44,7 +43,8 @@ export function CustomInput(props: ICustomInputsProps): React.ReactElement {
                     fontSize: '16px',
                     margin: '4px',
                     marginTop: '0',
-                    width: 'auto'
+                    width: 'auto',
+                    wordWrap: 'break-word'
                 }}
                 type={props.type}
                 defaultValue={props.defaultValue ?? undefined}
@@ -55,7 +55,6 @@ export function CustomInput(props: ICustomInputsProps): React.ReactElement {
                 onChange={(e) => {
                     if (props.onChange) props.onChange(e)
                 }} />
-            {/* } */}
         </Box>
     )
 }

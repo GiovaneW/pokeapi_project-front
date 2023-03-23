@@ -15,6 +15,7 @@ interface ICustomSelectProps { // extends SelectProps<ISelectOptions> {
     placeholder?: string
     label?: string
     defaultValue?: string | number
+    isrequired?: NodeRequire
 }
 
 export default function CustomSelect(props: ICustomSelectProps): React.ReactElement {
@@ -34,7 +35,7 @@ export default function CustomSelect(props: ICustomSelectProps): React.ReactElem
                     color: 'blueviolet',
                     fontFamily: 'monospace',
                     margin: '0.7em'
-                }}>{props.label}</label>
+                }}>{props.label}{props.isrequired ? '*' : ''}</label>
             </div>
             }
             <select

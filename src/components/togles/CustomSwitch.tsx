@@ -4,6 +4,7 @@ import React from 'react'
 
 interface ICustomSwitchProps extends SwitchProps {
     label?: string
+    isrequired?: NodeRequire
 }
 
 export default function CustomSwitch(props: ICustomSwitchProps): React.ReactElement {
@@ -22,7 +23,7 @@ export default function CustomSwitch(props: ICustomSwitchProps): React.ReactElem
                     color: 'blueviolet',
                     fontFamily: 'monospace',
                     margin: '0.7em'
-                }}>{props.label}</label>
+                }}>{props.label}{props.isrequired ? '*' : ''}</label>
             </div>
             }
             <div style={{
