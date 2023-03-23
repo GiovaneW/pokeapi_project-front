@@ -28,7 +28,7 @@ export function MainRoutes(props: { routes: Array<IRouteProps> }): React.ReactEl
             <Route path='/pokemons'>
                 <Route index element={pokemonList} />
                 <Route path=':id' element={testComponent} />
-                <Route path='edit/:id' element={testComponent} />
+                <Route path='edit/:id' element={pokemonForm} />
                 <Route path='create' element={pokemonForm} />
             </Route>
             <Route path='*' element={<ErrorBoundary />} />

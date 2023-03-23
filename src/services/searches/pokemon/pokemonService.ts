@@ -3,6 +3,7 @@ import api from '../../api'
 import { IPokemon } from '../../interfaces/pokemonInterfaces'
 import { TPokemonListData } from '../../../views/pokemon/PokemonList'
 import { AxiosError, AxiosResponse } from 'axios'
+import { IPokeSchema } from '../../schemas/pokemonSchemas'
 
 export async function listPokemons(params: ISearchParams): Promise<IApiResponse<IListResponseContent<TPokemonListData>>> {
     const queryParams = new URLSearchParams({
@@ -32,6 +33,24 @@ export async function deletePokemon(internal_id: number | string): Promise<IApiR
             result.status = res.status
             result.message = res.data.message ?? 'Pokémon deletado com sucesso!'
             if (res.data.data) result.data = res.data.data
+
+            resolve(result)
+        }, err => {
+            result.status = err.response?.status
+            result.error = err.response?.data.message ?? err.response?.data.error ?? err.message
+
+            resolve(result)
+        })
+
+    })
+}
+
+export async function getPokemon(internal_id: number | string): Promise<IApiResponse<IPokeSchema>> {
+    const result: IApiResponse<IPokeSchema> = { data: undefined, error: '', message: '' }
+    return new Promise((resolve) => {
+        api.get<AxiosError<{ message?: string, error?: string }>, AxiosResponse<IPokeSchema>>(`/pokemon/${internal_id}`).then(res => {
+            result.status = res.status
+            if (res.data) result.data = res.data
 
             resolve(result)
         }, err => {
