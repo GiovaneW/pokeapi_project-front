@@ -56,7 +56,7 @@ export default class PokemonList<Props> extends React.Component<Props, PokemonLi
             title: 'Sprite',
             render: (e) => {
                 return (
-                    <img src={e.sprites.front_default ?? e.sprites.front_shiny ?? ''} />
+                    <img src={e.sprites?.front_default ?? e.sprites?.front_shiny ?? ''} style={{maxHeight: '100px'}} />
                 )
             }
         },
@@ -71,7 +71,7 @@ export default class PokemonList<Props> extends React.Component<Props, PokemonLi
         {
             key: 'base_experience',
             title: 'Experiência Básica',
-            render: (e) => e.base_experience,
+            // render: (e) => e.base_experience,
             order: {
                 dataType: 'number'
             }

@@ -1,13 +1,15 @@
 import React from 'react'
+import { NavLink } from 'react-router-dom'
 import CustomForm from '../../components/form/CustomForm'
 import { Toast } from '../../components/toast/Toast'
 import { history } from '../../helpers/history'
-import { IPokeSchema, pokemonSchema } from '../../services/schemas/pokemonSchemas'
-import { getPokemon } from '../../services/searches/pokemon/pokemonService'
+import { IPokemon } from '../../services/interfaces/pokemonInterfaces'
+import { pokemonSchema } from '../../services/schemas/pokemonSchemas'
+import { createPokemon, getPokemon, updatePokemon } from '../../services/searches/pokemon/pokemonService'
 
 interface IPokemonFormState {
     urlPaths: Array<string>
-    pokemonData?: IPokeSchema
+    pokemonData?: IPokemon
 }
 export default class PokemonForm extends React.Component<any, IPokemonFormState> {
 
@@ -36,19 +38,36 @@ export default class PokemonForm extends React.Component<any, IPokemonFormState>
         })
     }
 
-    private submit(values: IPokeSchema) {
-        console.log(values)
+    private async submit(values: IPokemon) {
+        if (this.state.urlPaths[2] && Number(this.state.urlPaths[2])) {
+            updatePokemon(values, Number(this.state.urlPaths[2])).then(res => {
+                Toast({ message: res.error || res.message, severity: res.error ? 'error' : 'success' })
+                if (!res.error) {
+                    document.getElementById('pokemons-list')?.click()
+                }
+            })
+        } else {
+            createPokemon(values).then(res => {
+                Toast({ message: res.error || res.message, severity: res.error ? 'error' : 'success' })
+                if (!res.error) {
+                    document.getElementById('pokemons-list')?.click()
+                }
+            })
+        }
     }
 
     render(): React.ReactNode {
         console.log('Render')
         return (
             <div>
+
                 <h1>
-                    {this.state.pokemonData ? 'Edição de Pokémon' : 'Cadastro de Pokémon'}
+                    <NavLink id='pokemons-list' to='/pokemons' style={{ textDecoration: 'none', color: 'inherit' }}>
+                        {Number(this.state.urlPaths[2]) ? 'Edição de Pokémon' : 'Cadastro de Pokémon'}
+                    </NavLink>
                 </h1>
                 <CustomForm
-                    callBackSubmit={this.submit}
+                    callBackSubmit={(e) => this.submit(e)}
                     callBackCancell={() => history.goBack()}
                     defaultValues={this.state.pokemonData || {}}
                     schema={pokemonSchema}
@@ -63,24 +82,6 @@ export default class PokemonForm extends React.Component<any, IPokemonFormState>
                             { defaultValue: '', label: 'Padrão', name: 'is_default', type: 'boolean', placeholder: 'Padrão' }
                         ],
                         sprites: [
-                            { defaultValue: '', label: 'Rosto (padrão)', name: 'sprites.front_default', type: 'text', placeholder: 'Url da imagem' },
-                            { defaultValue: '', label: 'Costas (padrão)', name: 'sprites.back_default', type: 'text', placeholder: 'Url da imagem' },
-                            { defaultValue: '', label: 'Costas (feminino)', name: 'sprites.back_female', type: 'text', placeholder: 'Url da imagem' },
-                            { defaultValue: '', label: 'Rosto (shiny)', name: 'sprites.front_shiny', type: 'text', placeholder: 'Url da imagem' },
-                            { defaultValue: '', label: 'Costas (shiny)', name: 'sprites.back_shiny', type: 'text', placeholder: 'Url da imagem' },
-                            { defaultValue: '', label: 'Rosto (shiny e feminino)', name: 'sprites.front_shiny_female', type: 'text', placeholder: 'Url da imagem' },
-                            { defaultValue: '', label: 'Costas (shiny e feminino)', name: 'sprites.back_female_siny', type: 'text', placeholder: 'Url da imagem' },
-                        ],
-                        teste: [
-                            { defaultValue: '', label: 'Rosto (padrão)', name: 'sprites.front_default', type: 'text', placeholder: 'Url da imagem' },
-                            { defaultValue: '', label: 'Costas (padrão)', name: 'sprites.back_default', type: 'text', placeholder: 'Url da imagem' },
-                            { defaultValue: '', label: 'Costas (feminino)', name: 'sprites.back_female', type: 'text', placeholder: 'Url da imagem' },
-                            { defaultValue: '', label: 'Rosto (shiny)', name: 'sprites.front_shiny', type: 'text', placeholder: 'Url da imagem' },
-                            { defaultValue: '', label: 'Costas (shiny)', name: 'sprites.back_shiny', type: 'text', placeholder: 'Url da imagem' },
-                            { defaultValue: '', label: 'Rosto (shiny e feminino)', name: 'sprites.front_shiny_female', type: 'text', placeholder: 'Url da imagem' },
-                            { defaultValue: '', label: 'Costas (shiny e feminino)', name: 'sprites.back_female_siny', type: 'text', placeholder: 'Url da imagem' },
-                        ],
-                        'outro teste': [
                             { defaultValue: '', label: 'Rosto (padrão)', name: 'sprites.front_default', type: 'text', placeholder: 'Url da imagem' },
                             { defaultValue: '', label: 'Costas (padrão)', name: 'sprites.back_default', type: 'text', placeholder: 'Url da imagem' },
                             { defaultValue: '', label: 'Costas (feminino)', name: 'sprites.back_female', type: 'text', placeholder: 'Url da imagem' },

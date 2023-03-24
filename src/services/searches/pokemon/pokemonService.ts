@@ -1,9 +1,9 @@
 import { IApiResponse, IBasicNestListResult, IListResponseContent, IObjectLiteral, ISearchParams } from '../../interfaces/defIntefaces'
 import api from '../../api'
-import { IPokemon } from '../../interfaces/pokemonInterfaces'
+import { IPokemon, ISprites } from '../../interfaces/pokemonInterfaces'
 import { TPokemonListData } from '../../../views/pokemon/PokemonList'
 import { AxiosError, AxiosResponse } from 'axios'
-import { IPokeSchema } from '../../schemas/pokemonSchemas'
+import { ISpritesSchema } from '../../schemas/pokemonSchemas'
 
 export async function listPokemons(params: ISearchParams): Promise<IApiResponse<IListResponseContent<TPokemonListData>>> {
     const queryParams = new URLSearchParams({
@@ -19,8 +19,8 @@ export async function listPokemons(params: ISearchParams): Promise<IApiResponse<
             }
             if (res.data) result.data = res.data
         }, (err: AxiosError<IObjectLiteral>) => {
-            if (err.response?.data?.message) {
-                result.error = String(err.response.data.message)
+            if (err?.response?.data?.message) {
+                result.error = String(err?.response?.data?.message)
             }
         })
     return result
@@ -37,7 +37,7 @@ export async function deletePokemon(internal_id: number | string): Promise<IApiR
             resolve(result)
         }, err => {
             result.status = err.response?.status
-            result.error = err.response?.data.message ?? err.response?.data.error ?? err.message
+            result.error = err?.response?.data?.message ?? err?.response?.data?.error ?? err.message
 
             resolve(result)
         })
@@ -45,21 +45,72 @@ export async function deletePokemon(internal_id: number | string): Promise<IApiR
     })
 }
 
-export async function getPokemon(internal_id: number | string): Promise<IApiResponse<IPokeSchema>> {
-    const result: IApiResponse<IPokeSchema> = { data: undefined, error: '', message: '' }
+export async function getPokemon(internal_id: number | string): Promise<IApiResponse<IPokemon>> {
+    const result: IApiResponse<IPokemon> = { data: undefined, error: '', message: '' }
     return new Promise((resolve) => {
-        api.get<AxiosError<{ message?: string, error?: string }>, AxiosResponse<IPokeSchema>>(`/pokemon/${internal_id}`).then(res => {
+        api.get<AxiosError<{ message?: string, error?: string }>, AxiosResponse<IPokemon>>(`/pokemon/${internal_id}`).then(res => {
             result.status = res.status
             if (res.data) result.data = res.data
 
             resolve(result)
         }, err => {
             result.status = err.response?.status
-            result.error = err.response?.data.message ?? err.response?.data.error ?? err.message
+            result.error = err?.response?.data?.message ?? err?.response?.data?.error ?? err.message
 
             resolve(result)
         })
 
+    })
+}
+
+export async function createPokemon(data: IPokemon): Promise<IApiResponse<IPokemon>> {
+    const result: IApiResponse<IPokemon> = { message: '' }
+    return new Promise((resolve) => {
+        api.post<AxiosError<{ message?: string, error?: string }>, AxiosResponse<{ data?: IPokemon, message?: string }>>('/pokemon', data).then(res => {
+            result.status = res.status
+            result.message = res.data.message || 'Pokémon criado com sucesso!'
+            if (res.data.data) result.data = res.data.data
+            resolve(result)
+        }, err => {
+            result.status = err.status
+            result.error = err?.response?.data?.message ?? err?.response?.data?.error ?? err.message
+            resolve(result)
+        })
+    })
+}
+
+export async function updatePokemon(data: IPokemon, pokemonId: number): Promise<IApiResponse<IPokemon>> {
+    const result: IApiResponse<IPokemon> = { message: '' }
+    return new Promise((resolve) => {
+        api.patch<AxiosError<{ message?: string, error?: string }>, AxiosResponse<{ data?: IPokemon, message?: string }>>(`/pokemon/${pokemonId}`, data).then(res => {
+            result.status = res.status
+            result.message = res.data.message || 'Pokémon atualizado com sucesso!'
+            if (res.data.data) result.data = res.data.data
+            resolve(result)
+        }, err => {
+            result.status = err.status
+            result.error = err?.response?.data?.message ?? err?.response?.data?.error ?? err.message
+            resolve(result)
+        })
+    })
+}
+
+export async function updateOnlySprites(data: ISpritesSchema, pokemonId: number): Promise<IApiResponse<ISprites>> {
+    const result: IApiResponse<ISprites> = { message: '' }
+    console.log(data)
+    return new Promise((resolve) => {
+        api.put<AxiosError<{ message?: string, error?: string }>, AxiosResponse<{ data?: ISprites, message?: string }>>(`/pokemon/${pokemonId}/sprites`, data, { headers: {
+            'Content-Type': 'multipart/form-data'
+        } }).then(res => {
+            result.status = res.status
+            result.message = res.data.message || 'Sprites atualizadas com sucesso!'
+            if (res.data.data) result.data = res.data.data
+            resolve(result)
+        }, err => {
+            result.status = err.status
+            result.error = err?.response?.data?.message ?? err?.response?.data?.error ?? err.message
+            resolve(result)
+        })
     })
 }
 

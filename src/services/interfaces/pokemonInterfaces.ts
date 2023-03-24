@@ -1,15 +1,16 @@
 import { IBasicNestListResult, IObjectLiteral } from "./defIntefaces"
 
 export interface IPokemon {
-    base_experience: number
-    height: number
-    id: number
-    is_default: boolean
-    location_area_encounters: string // url que vem da api
     name: string
-    order: number
-    sprites: ISprites
-    weight: number
+    id?: number
+    internal_id?: number
+    order?: number
+    weight?: number
+    height?: number
+    base_experience?: number
+    is_default?: boolean
+    location_area_encounters?: string // url que vem da api
+    sprites?: ISprites
     // abilities: Array<IAbilityListItem>
     // forms: IBasicNestListResult<IForms>
     // game_indices: Array<IGameIndicesListItem>
@@ -56,13 +57,13 @@ interface IPastTypes extends IObjectLiteral { }
 interface ISpecies extends IObjectLiteral { }
 
 export interface ISprites {
-    back_default: string | null
-    back_female: string | null
-    back_shiny: string | null
-    back_shiny_female: string | null
-    front_default: string | null
-    front_shiny: string | null
-    front_shiny_female: string | null
+    back_default?: string | null
+    back_female?: string | null
+    back_shiny?: string | null
+    back_shiny_female?: string | null
+    front_default?: string | null
+    front_shiny?: string | null
+    front_shiny_female?: string | null
 }
 
 interface IStatListItem {
